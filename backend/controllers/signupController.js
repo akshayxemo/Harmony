@@ -1,23 +1,47 @@
-let User = require('../models/user.model');
 const bcrypt = require('bcryptjs');
-require('dotenv').config();
+const {User, validate} = require('../models/user.model');
+const jwt = require('jsonwebtoken');
+
 module.exports={
     get : (req,res)=>{
-        res.send("Sign-Up get request")
+        res.send("Sign-Up get request");
     },
-    post:(req,res)=>{
-        console.log(req.body)
-        const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(req.body.password, salt);
-        console.log("Hash is "+hash+" salt:"+salt)
+    post:async(req,res)=>{
+        console.log(req.body);
+        // validating the posting data
+        const {error} = validate(req.body);
+        if(error){
+            console.log("not validate :" + error.details[0].message)
+            return res.status(400).json({message: error.details[0].message});
+        }
+
+        // finding if the user is already exist or not
+        const foundUser = await User.findOne({emailId:req.body.email})
+        if(foundUser){
+            return res.status(409).json({message: 'User Email Already Exist'});
+        }
+        // Hashed the Password
+        const salt = await bcrypt.genSaltSync(Number(process.env.SALT_ROUND));
+        const hash = await bcrypt.hashSync(req.body.password, salt);
+        // console.log("Hash is "+hash+" salt:"+salt)
+
+        // Create a new user
         const newUser = new User({
             username: req.body.name,
             gender: req.body.gender,
             emailId: req.body.email,
             password: hash
         })
-        newUser.save()
-        .then(()=> res.send("Successfully Signed Up"))
+
+        // Save it to the database
+        await newUser.save()
+        .then(()=> {
+            console.log("user id :"+newUser._id)
+            // Generate the JWT token
+            const token = jwt.sign({userId: newUser._id}, process.env.JWT_SECRET_KEY);
+            res.json({ token });
+        })
         .catch((err)=> res.status(400).json('Error: '+err))
+
     }
 }

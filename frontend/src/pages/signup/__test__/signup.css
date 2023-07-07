@@ -36,8 +36,12 @@ input[type=radio]{
     text-align: center;
 }
 .form-error-msg{
-    color: red;
-    margin-bottom: 1rem;
+    padding: 5px;
+    border: 1px solid red;
+    border-radius: 3px;
+    background-color: red;
+    color: #fff;
+    margin-bottom: 5px;
     text-align: center;
 }
 .additional-sec{

@@ -8,12 +8,16 @@ function SignupForm() {
         name: '',
         email: '',
         password: '',
-        confirmPassword: '',
         gender: ''
       };
     const[formData, setFormData]=useState(initialFormData);
     const [passwordError, setPasswordError] = useState('');
     const [formError, setFormError] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    const handleConfirmPasswordInput = (e)=>{
+      setConfirmPassword(e.target.value)
+    };
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,7 +29,7 @@ function SignupForm() {
         if (validateForm()) {
           setFormError('');
     
-          if (formData.password === document.getElementById('confirm-password').value) {
+          if (formData.password === confirmPassword) {
             // Passwords match, proceed with form submission
             axios
               .post('http://localhost:3000/signup', formData)
@@ -33,6 +37,7 @@ function SignupForm() {
                 // Handle successful response
                 setFormError('');
                 setPasswordError('');
+                setConfirmPassword('');
                 setFormData(initialFormData);
                 console.log(response.data);
               })
@@ -55,7 +60,8 @@ function SignupForm() {
           formData.name.trim() !== '' &&
           formData.email.trim() !== '' &&
           formData.password.trim() !== '' &&
-          formData.gender.trim() !== ''
+          formData.gender.trim() !== ''&&
+          confirmPassword !== ''
         );
       };
     return (
@@ -101,11 +107,11 @@ function SignupForm() {
                                 id="confirm-password" 
                                 name='confirmPassword' 
                                 placeholder='confirm password'
-                                value={formData.confirmPassword} onChange={handleInputChange}
+                                value={confirmPassword} onChange={handleConfirmPasswordInput}
                             />
                         </div>
                     </div>
-                    {passwordError && <p className="form-error-msg" style={{ color: 'red' }}>{passwordError}</p>}
+                    
                     <div className="gender-form">
                     <label htmlFor="">Gender: </label>
                         <div className="option">
@@ -139,7 +145,8 @@ function SignupForm() {
                             /> Others
                         </div>
                     </div>
-                    {formError && <p className="form-error-msg">{formError}</p>}
+                    {passwordError && <p className="form-error-msg">{passwordError}</p> ||
+                      formError && <p className="form-error-msg">{formError}</p>}
                     <button type='submit' className='btn btn-lime-blue btn-full'>Sign up</button>
                 </form>
                 <p className="alternate-option">
