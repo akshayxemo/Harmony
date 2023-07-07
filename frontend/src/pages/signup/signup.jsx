@@ -1,19 +1,22 @@
 import { useState } from 'react';
 import './__test__/signup.css';
 import axios from 'axios';
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
+// import Failure from './failture'
 
 function SignupForm() {
+    const navigate = useNavigate()
     const initialFormData = {
         name: '',
         email: '',
         password: '',
         gender: ''
       };
-    const[formData, setFormData]=useState(initialFormData);
+    const [formData, setFormData]=useState(initialFormData);
     const [passwordError, setPasswordError] = useState('');
     const [formError, setFormError] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [submitError, setSubmitError] = useState('');
 
     const handleConfirmPasswordInput = (e)=>{
       setConfirmPassword(e.target.value)
@@ -31,19 +34,22 @@ function SignupForm() {
     
           if (formData.password === confirmPassword) {
             // Passwords match, proceed with form submission
+            setFormError('');
+            setPasswordError('');
+            setSubmitError('');
             axios
               .post('http://localhost:3000/signup', formData)
               .then((response) => {
                 // Handle successful response
-                setFormError('');
-                setPasswordError('');
                 setConfirmPassword('');
                 setFormData(initialFormData);
                 console.log(response.data);
+                navigate("/auth/success");
               })
               .catch((error) => {
                 // Handle error
                 console.error(error);
+                setSubmitError(error.response.data.message);
               });
             console.log(formData)
           } else {
@@ -146,7 +152,8 @@ function SignupForm() {
                         </div>
                     </div>
                     {passwordError && <p className="form-error-msg">{passwordError}</p> ||
-                      formError && <p className="form-error-msg">{formError}</p>}
+                      formError && <p className="form-error-msg">{formError}</p> ||
+                      submitError && <p className="server-error-msg">{submitError}</p>}
                     <button type='submit' className='btn btn-lime-blue btn-full'>Sign up</button>
                 </form>
                 <p className="alternate-option">

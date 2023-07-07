@@ -44,6 +44,15 @@ input[type=radio]{
     margin-bottom: 5px;
     text-align: center;
 }
+.server-error-msg{
+    padding: 10px;
+    border: 2px solid red;
+    font-weight: 500;
+    border-radius: 3px;
+    color: red;
+    margin-bottom: 5px;
+    text-align: center;
+}
 .additional-sec{
     margin-bottom: 1rem;
     display: flex;

@@ -11,6 +11,7 @@ function LoginForm() {
       };
     const[formData, setFormData]=useState(initialFormData);
     const [formError, setFormError] = useState('');
+    const [submitError, setSubmitError] = useState('');
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,18 +22,19 @@ function LoginForm() {
     
         if (validateForm()) {
           setFormError('');
+          setSubmitError('');
           console.log(formData)
           axios
               .post('http://localhost:3000/login', formData)
               .then((response) => {
                 // Handle successful response
-                setFormError('');
                 setFormData(initialFormData);
                 console.log(response.data);
               })
               .catch((error) => {
                 // Handle error
                 console.error(error);
+                setSubmitError(error.response.data.message);
               });
         } else {
           setFormError('Please fill in all the fields.');
@@ -71,7 +73,8 @@ function LoginForm() {
                     <div className="additional-sec">
                         <Link to={`/auth/forget-password`}>Forget Password?</Link>
                     </div>
-                    {formError && <p className="form-error-msg">{formError}</p>}
+                    {formError && <p className="form-error-msg">{formError}</p> ||
+                    submitError && <p className="server-error-msg">{submitError}</p>}
                     <button type='submit' className='btn btn-orange btn-full'>Login</button>
                     <button className='btn btn-light btn-full' style={{marginTop:"1rem", display:"flex", alignItems:"center", justifyContent:"center"}}>
                         <img src={googleIcon} alt="google logo png" style={{width:"25px", aspectRatio:"1/1", marginRight:"1rem"}}/>

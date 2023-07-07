@@ -1,5 +1,6 @@
 import './App.css'
 import Signup_login from './pages/signup/signup-login'
+import SignupSuccess from './pages/signup/signup-success'
 import * as React from 'react'
 import {
   createBrowserRouter,
@@ -22,6 +23,10 @@ const Router = createBrowserRouter([
   {
     path:'/auth/forget-password',
     element:<Signup_login page="forget-password"/>
+  },
+  {
+    path:'/auth/success',
+    element: <SignupSuccess/>
   }
 ])
 
