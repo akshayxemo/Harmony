@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './__test__/signup.css';
 import axios from 'axios';
 import { Link , useNavigate } from "react-router-dom";
+import Loader from '../../components/loader';
 // import Failure from './failture'
 
 function SignupForm() {
@@ -17,6 +18,7 @@ function SignupForm() {
     const [formError, setFormError] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [submitError, setSubmitError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleConfirmPasswordInput = (e)=>{
       setConfirmPassword(e.target.value)
@@ -37,14 +39,21 @@ function SignupForm() {
             setFormError('');
             setPasswordError('');
             setSubmitError('');
+            setIsLoading(true);
+
+            //sending data to the server
             axios
               .post('http://localhost:3000/signup', formData)
               .then((response) => {
+
                 // Handle successful response
                 setConfirmPassword('');
                 setFormData(initialFormData);
                 console.log(response.data);
-                navigate("/auth/success");
+                setTimeout(()=>{
+                  setIsLoading(false)
+                  navigate("/auth/success");
+                },2000);
               })
               .catch((error) => {
                 // Handle error
@@ -70,7 +79,9 @@ function SignupForm() {
           confirmPassword !== ''
         );
       };
-    return (
+    return (<>
+      {isLoading && <Loader/>}
+      {!isLoading &&
         <div className="form">
                 <form action="/signup" method='post' onSubmit={handleSubmit}>
                     <p className="mini-heading">lets get started</p>
@@ -159,8 +170,8 @@ function SignupForm() {
                 <p className="alternate-option">
                     Already have an account? <Link to={`/auth/login`}>Login</Link>
                 </p>
-            </div>
-    )
+            </div>}
+            </>)
 }
 
 export default SignupForm
