@@ -68,7 +68,7 @@ module.exports={
                 },{ $set:{ password: hash }});
             
             //sending email to the user
-            sendMail(varify.email, "[Harmony] Your Password Reset Successfully", "Your Account Password have been reset. Not you? then Contact us at akshaykrdas001@gmail.com")
+            sendMail(varify.email, "[Harmony] Your Password Reset Successfully ✅", "Your Account Password have been reset. Not you? then Contact us at akshaykrdas001@gmail.com")
             //Sending response
             res.render("success")
         }

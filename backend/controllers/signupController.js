@@ -38,7 +38,7 @@ module.exports={
             console.log("user id :"+newUser._id)
             // Generate the JWT token
             const token = jwt.sign({userId: newUser._id}, process.env.JWT_SECRET_KEY);
-            sendMail(req.body.email, "[Harmony] Signed Up Success", `CONGRATULATIONS!! ${req.body.name}\nYou have successfully signed up with us`)
+            sendMail(req.body.email, "[Harmony] SIGN UP Success ✅", `CONGRATULATIONS!! ${req.body.name}\nYou have successfully signed up with us`)
             res.json({ token });
         })
         .catch((err)=> res.status(400).json('Error: '+err))
