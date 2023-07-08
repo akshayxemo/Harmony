@@ -1,4 +1,4 @@
-import loadAnimation from '../assets/lotus.gif'
+import loadAnimation from '../assets/lotus-circle.gif'
 function Loader(){
     return(<>
         <div className="container-lg">

@@ -21,7 +21,7 @@ function ForgetPasswordForm() {
           setFormError('');
           console.log(formData)
           axios
-              .post('http://localhost:3000/login', formData)
+              .post('http://localhost:3000/forget-password', formData)
               .then((response) => {
                 // Handle successful response
                 setFormError('');

@@ -14,9 +14,7 @@ const validate = (data)=>{
 }
 
 module.exports={
-    get : (req,res)=>{
-        res.send("Login get request")
-    },
+    
     post:async(req,res)=>{
         console.log(req.body);
         // validating the posting data
@@ -26,8 +24,10 @@ module.exports={
             return res.status(400).json({message: error.details[0].message});
         }
         
+        // finding the user
         await User.findOne({emailId: req.body.email})
         .then((foundUser)=>{
+            // varifing the password
             if(bcrypt.compareSync(req.body.password, foundUser.password)){
                 const token = jwt.sign({userId:foundUser._id}, process.env.JWT_SECRET_KEY, {expiresIn: "7d"});
                 res.status(200).send({data:token, messsage: "Logged in Successfully"});

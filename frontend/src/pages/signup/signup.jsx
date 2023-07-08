@@ -53,12 +53,15 @@ function SignupForm() {
                 setTimeout(()=>{
                   setIsLoading(false)
                   navigate("/auth/success");
-                },2000);
+                },2500);
               })
               .catch((error) => {
                 // Handle error
                 console.error(error);
-                setSubmitError(error.response.data.message);
+                setTimeout(()=>{
+                  setIsLoading(false)
+                  setSubmitError(error.response.data.message);
+                },2500);
               });
             console.log(formData)
           } else {
